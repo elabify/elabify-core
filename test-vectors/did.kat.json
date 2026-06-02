@@ -1,0 +1,134 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "parseDID",
+  "description": "did:elabify parsing + round-trip per ADR-0021. Error codes pinned: malformed | extra-colons | empty-component.",
+  "vectors": [
+    {
+      "name": "issuer-registrar",
+      "input": {
+        "did": "did:elabify:adgm:issuer:bank-of-abu-dhabi"
+      },
+      "expected": {
+        "network": "adgm",
+        "entityType": "issuer",
+        "identifier": "bank-of-abu-dhabi"
+      }
+    },
+    {
+      "name": "user-hex",
+      "input": {
+        "did": "did:elabify:adgm:user:0x1a2b3c4d5e6f7890abcdef0123456789abcdef01"
+      },
+      "expected": {
+        "network": "adgm",
+        "entityType": "user",
+        "identifier": "0x1a2b3c4d5e6f7890abcdef0123456789abcdef01"
+      }
+    },
+    {
+      "name": "verifier-uniswap",
+      "input": {
+        "did": "did:elabify:eth:verifier:uniswap-v4-hook-0x1234"
+      },
+      "expected": {
+        "network": "eth",
+        "entityType": "verifier",
+        "identifier": "uniswap-v4-hook-0x1234"
+      }
+    },
+    {
+      "name": "sepolia-issuer",
+      "input": {
+        "did": "did:elabify:sepolia:issuer:dev"
+      },
+      "expected": {
+        "network": "sepolia",
+        "entityType": "issuer",
+        "identifier": "dev"
+      }
+    },
+    {
+      "name": "local-corporate",
+      "input": {
+        "did": "did:elabify:local:issuer:corporate"
+      },
+      "expected": {
+        "network": "local",
+        "entityType": "issuer",
+        "identifier": "corporate"
+      }
+    },
+    {
+      "name": "too-few-colons",
+      "input": {
+        "did": "did:elabify:adgm:issuer"
+      },
+      "expected": {
+        "error": "malformed"
+      }
+    },
+    {
+      "name": "extra-colons",
+      "input": {
+        "did": "did:elabify:adgm:user:foo:bar"
+      },
+      "expected": {
+        "error": "extra-colons"
+      }
+    },
+    {
+      "name": "wrong-scheme",
+      "input": {
+        "did": "urn:elabify:adgm:issuer:dev"
+      },
+      "expected": {
+        "error": "malformed"
+      }
+    },
+    {
+      "name": "wrong-method",
+      "input": {
+        "did": "did:other:adgm:issuer:dev"
+      },
+      "expected": {
+        "error": "malformed"
+      }
+    },
+    {
+      "name": "mixed-case-method",
+      "input": {
+        "did": "DID:Elabify:adgm:issuer:dev"
+      },
+      "expected": {
+        "error": "malformed"
+      }
+    },
+    {
+      "name": "empty-network",
+      "input": {
+        "did": "did:elabify::issuer:dev"
+      },
+      "expected": {
+        "error": "empty-component"
+      }
+    },
+    {
+      "name": "empty-entity-type",
+      "input": {
+        "did": "did:elabify:adgm::dev"
+      },
+      "expected": {
+        "error": "empty-component"
+      }
+    },
+    {
+      "name": "empty-identifier",
+      "input": {
+        "did": "did:elabify:adgm:issuer:"
+      },
+      "expected": {
+        "error": "empty-component"
+      }
+    }
+  ]
+}

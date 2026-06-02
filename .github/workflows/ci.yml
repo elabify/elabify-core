@@ -1,0 +1,39 @@
+# Verification gate for the canonical TypeScript implementation:
+# typecheck + test (vitest, runs the frozen KAT corpus) + build.
+# The Swift and Kotlin bindings are validated against the same corpus
+# inside the apps that consume them.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typescript:
+    name: typecheck + test + build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+
+      - name: Install
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Test
+        run: npm test

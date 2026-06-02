@@ -1,0 +1,84 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "rpo256Tagged",
+  "description": "Domain-tagged RPO-256: rpo256([tag, ...content]). Tags 0x00-0x04 reserved per wire-formats.md §3.",
+  "vectors": [
+    {
+      "name": "tag-empty-leaf-idx-0",
+      "description": "Domain tag 0x00 + u64BE(0). Empty-leaf hash for index 0.",
+      "input": {
+        "tag": 0,
+        "contentHex": "0000000000000000"
+      },
+      "expected": {
+        "hex": "536dbb7dca0bd39960c8fd3dff2e1ba08fdd78516eff23d4ff0b6b1f58c9a84d"
+      }
+    },
+    {
+      "name": "tag-empty-leaf-idx-7",
+      "description": "Domain tag 0x00 + u64BE(7). Empty-leaf hash for index 7.",
+      "input": {
+        "tag": 0,
+        "contentHex": "0000000000000007"
+      },
+      "expected": {
+        "hex": "4e9836445307e155f6247a28fd302a24243bb43d4f541b1d21263787c793b77d"
+      }
+    },
+    {
+      "name": "tag-leaf-64",
+      "description": "Domain tag 0x01 + 64 bytes (typical leaf-hash input: keyH ‖ valH).",
+      "input": {
+        "tag": 1,
+        "contentHex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "expected": {
+        "hex": "780df1dd81715ff517b76e9f7f8ac8e9c26808a84714b8fb4fe112e0e69b8a19"
+      }
+    },
+    {
+      "name": "tag-inner-64",
+      "description": "Domain tag 0x02 + 64 bytes (typical Merkle inner-node combine).",
+      "input": {
+        "tag": 2,
+        "contentHex": "11111111111111111111111111111111111111111111111111111111111111112222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "expected": {
+        "hex": "2fadf0a27909ff194d580a5e7831cd5db707691cae968360f622271939fa7cc5"
+      }
+    },
+    {
+      "name": "tag-user-id-pk",
+      "description": "Domain tag 0x03 + 32-byte pubkey (user-identifier derivation per wire-formats.md §2.2).",
+      "input": {
+        "tag": 3,
+        "contentHex": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+      },
+      "expected": {
+        "hex": "1543ccd2ece30f6eb34e17b5ff93ffe44025b3b134b3fc41a598db0bf7e971e6"
+      }
+    },
+    {
+      "name": "tag-cid-derivation",
+      "description": "Domain tag 0x04 + 41 bytes (header-shaped CID derivation prefix).",
+      "input": {
+        "tag": 4,
+        "contentHex": "7b2276227b2276227b2276227b2276227b2276227b2276227b2276227b2276227b2276227b22762200"
+      },
+      "expected": {
+        "hex": "05c8c9bf49fd67b8385b65b1061e3a3e00082ef48112fb78485471aeb56f94a2"
+      }
+    },
+    {
+      "name": "tag-0xff-empty",
+      "description": "Domain tag 0xff (boundary) with empty content.",
+      "input": {
+        "tag": 255,
+        "contentHex": ""
+      },
+      "expected": {
+        "hex": "f1d864522e1b30545753105e526eb615ae24500b5515b4c782c28c30878f898d"
+      }
+    }
+  ]
+}

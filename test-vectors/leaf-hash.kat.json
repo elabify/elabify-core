@@ -1,0 +1,47 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "leafHash",
+  "description": "Spec primitive leafHash(keyBytes, valueBytes): rpo256(0x01 ‖ rpo256(keyBytes) ‖ rpo256(valueBytes)).",
+  "vectors": [
+    {
+      "name": "small-bytes",
+      "input": {
+        "keyHex": "6b",
+        "valueHex": "76"
+      },
+      "expected": {
+        "hex": "080167bae8bdbe432c9080cd39ae4ab0880b121b932af41725c599a2f4d56775"
+      }
+    },
+    {
+      "name": "long-bytes",
+      "input": {
+        "keyHex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "valueHex": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      "expected": {
+        "hex": "652ef94aab47a5ca0ae136abc1646f890a6f30c173aa4b3bd6b7a4e659d467e4"
+      }
+    },
+    {
+      "name": "empty-key",
+      "input": {
+        "keyHex": "",
+        "valueHex": "42"
+      },
+      "expected": {
+        "hex": "b139e5729bd13dd68b0b4b2a9010559e8b243b89083a5472cec8333c0f57a165"
+      }
+    },
+    {
+      "name": "empty-value",
+      "input": {
+        "keyHex": "42",
+        "valueHex": ""
+      },
+      "expected": {
+        "hex": "e0713d7a16c2b3200c1a0629d672d434355a84f94d073dcaebd3144acf8ed736"
+      }
+    }
+  ]
+}

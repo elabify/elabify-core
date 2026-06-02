@@ -1,0 +1,97 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "emptyLeafHash",
+  "description": "Index-tagged empty-leaf hash: rpo256Tagged(0x00, u64BE(index)). Used to pad Merkle trees to power-of-2 size.",
+  "vectors": [
+    {
+      "name": "index-0",
+      "input": {
+        "index": 0
+      },
+      "expected": {
+        "hex": "536dbb7dca0bd39960c8fd3dff2e1ba08fdd78516eff23d4ff0b6b1f58c9a84d"
+      }
+    },
+    {
+      "name": "index-1",
+      "input": {
+        "index": 1
+      },
+      "expected": {
+        "hex": "304ea493b38534b0ff16d4a765a36d5b83cd474014834b401f697b3698e930cf"
+      }
+    },
+    {
+      "name": "index-2",
+      "input": {
+        "index": 2
+      },
+      "expected": {
+        "hex": "1b096b22049752706a499e74d51b3e482e07da033e92410ce384b31ed6590234"
+      }
+    },
+    {
+      "name": "index-7",
+      "input": {
+        "index": 7
+      },
+      "expected": {
+        "hex": "4e9836445307e155f6247a28fd302a24243bb43d4f541b1d21263787c793b77d"
+      }
+    },
+    {
+      "name": "index-8",
+      "input": {
+        "index": 8
+      },
+      "expected": {
+        "hex": "215757dbecfe12e8069918f6b75d1ae28ea4db59f1a04b2fd75775eb28cc3002"
+      }
+    },
+    {
+      "name": "index-15",
+      "input": {
+        "index": 15
+      },
+      "expected": {
+        "hex": "85b5b7c8366fc26231ebd3e5b3a3102d316ee1301bbfa88f861b362be10400d0"
+      }
+    },
+    {
+      "name": "index-16",
+      "input": {
+        "index": 16
+      },
+      "expected": {
+        "hex": "8a5972f1c094d69e01087a1afb052920b0976a703b34215aa4392ba8d2d9dff7"
+      }
+    },
+    {
+      "name": "index-31",
+      "input": {
+        "index": 31
+      },
+      "expected": {
+        "hex": "64651dcff13034b95207fcf0358c8c1d49c60bed32f3e311b0e33b21a7d97172"
+      }
+    },
+    {
+      "name": "index-127",
+      "input": {
+        "index": 127
+      },
+      "expected": {
+        "hex": "f793043b060eb28f3c8c1304b9f0fe1010d9bfc644054f37c21cbb23f0a2b3eb"
+      }
+    },
+    {
+      "name": "index-1023",
+      "input": {
+        "index": 1023
+      },
+      "expected": {
+        "hex": "de94ac2284de358580c05eb3629a6f924089b57814522e55ee65275297bbf7a7"
+      }
+    }
+  ]
+}

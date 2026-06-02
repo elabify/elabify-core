@@ -1,0 +1,38 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "deriveCid",
+  "description": "Credential ID = rpo256(0x04 ‖ canonicalize({...header, cid:\"\"}) ‖ u64BE(iat)). See wire-formats.md §4.3.",
+  "vectors": [
+    {
+      "name": "minimal-header",
+      "input": {
+        "headerWithoutCid": {
+          "iss": "did:elabify:sepolia:issuer:test",
+          "sub": "did:elabify:sepolia:holder:alice"
+        },
+        "iat": 1735689600
+      },
+      "expected": {
+        "hex": "10f17f563cc87cf21c66ad607cdd158b7fad8a6d6a5ac1278aa43a1b4992ad94"
+      }
+    },
+    {
+      "name": "full-header",
+      "input": {
+        "headerWithoutCid": {
+          "v": 2,
+          "iss": "did:elabify:sepolia:issuer:examplecorp",
+          "sub": "did:elabify:sepolia:holder:alice-demo",
+          "schema": "elabify://schema/global/corporateOfficer/v1",
+          "root": "0xabababababababababababababababababababababababababababababababab",
+          "exp": 1893456000,
+          "kid": "key-2026-01"
+        },
+        "iat": 1768348800
+      },
+      "expected": {
+        "hex": "09b162331e4038d5a13f7cd798a0476cf30bcbbd86821ad394f0a97eb50374a0"
+      }
+    }
+  ]
+}

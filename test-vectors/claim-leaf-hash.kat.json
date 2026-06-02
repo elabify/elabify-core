@@ -1,0 +1,84 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "claimLeafHash",
+  "description": "Convenience leaf-hash for (key:string, value:unknown) — exercises NFC + canonicalize + leafHash spec primitive.",
+  "vectors": [
+    {
+      "name": "string-claim",
+      "input": {
+        "key": "givenName",
+        "value": "Fatima"
+      },
+      "expected": {
+        "hex": "35884644fa407521bf9cc7fdcbb3267436e8e71d155159af25d9bf5ea2c9bc7e"
+      }
+    },
+    {
+      "name": "boolean-claim",
+      "input": {
+        "key": "over18",
+        "value": true
+      },
+      "expected": {
+        "hex": "a571c73960d893822ec998a6acdba3f0112603b38f0bbbcd779441288eb21b72"
+      }
+    },
+    {
+      "name": "integer-claim",
+      "input": {
+        "key": "yearOfBirth",
+        "value": 1990
+      },
+      "expected": {
+        "hex": "2331178d125eda573cbee8b9bf8fb3fcb6a06f13d8ae851a6394eaa193233d7a"
+      }
+    },
+    {
+      "name": "null-claim",
+      "input": {
+        "key": "middleName",
+        "value": null
+      },
+      "expected": {
+        "hex": "5f8c0732532518f1a4553f8b0cc5a6272d7af3a16a6123f0b1fd66dd4d698262"
+      }
+    },
+    {
+      "name": "nested-claim",
+      "input": {
+        "key": "address",
+        "value": {
+          "street": "1 Sample Rd",
+          "city": "Abu Dhabi"
+        }
+      },
+      "expected": {
+        "hex": "f7a720d28163848341da05b8b7f27aee7cf557f6ebab4f57f882fed20a85ae7c"
+      }
+    },
+    {
+      "name": "array-claim",
+      "input": {
+        "key": "aliases",
+        "value": [
+          "Fati",
+          "Fa"
+        ]
+      },
+      "expected": {
+        "hex": "0067a96539d27138a8cd72724995f6d264eefbcbecb4fd3889fcc1a3733aa220"
+      }
+    },
+    {
+      "name": "unicode-key",
+      "description": "Key is NFC-normalized before encoding.",
+      "input": {
+        "key": "café",
+        "value": "value"
+      },
+      "expected": {
+        "hex": "d3bcb56ee9437fd90ee8ef8dc77e7df152b70719a1c9e2c76e17be16286a574a"
+      }
+    }
+  ]
+}

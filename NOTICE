@@ -1,0 +1,7 @@
+# NOTICE: third-party attributions
+
+This package (Apache-2.0; see LICENSE.md) depends on:
+
+- **@noble/hashes** (MIT): audited hash primitives
+
+Dev-only tooling (typescript, vitest, tsx) is under Apache-2.0 / MIT.

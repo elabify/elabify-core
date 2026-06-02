@@ -1,0 +1,45 @@
+{
+  "name": "@elabify/core",
+  "version": "0.1.0",
+  "description": "Elabify shared cryptographic and serialization library — M0 TypeScript canonical implementation with frozen KAT corpus. See README.md and ADR-0017.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "test-vectors",
+    "README.md"
+  ],
+  "bin": {
+    "elabify-core": "./dist/cli/index.js"
+  },
+  "engines": {
+    "node": ">=20.10.0"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && chmod +x dist/cli/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist",
+    "kat:gen": "tsx tools/kat-generator/index.ts",
+    "kat:run": "tsx tools/kat-runner/index.ts"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.0",
+    "vitest": "^4.1.0"
+  }
+}

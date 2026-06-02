@@ -1,0 +1,107 @@
+{
+  "$schema": "https://elabify.org/kat/v1.json",
+  "function": "rpo256",
+  "description": "RPO-256 sponge hash over Goldilocks field. Returns 32 bytes. See wire-formats.md §5 and ADR-0020.",
+  "vectors": [
+    {
+      "name": "empty",
+      "description": "Empty input — exercises 10* padding alone.",
+      "input": {
+        "hex": ""
+      },
+      "expected": {
+        "hex": "1f3a2acdedda50648963a6197331d52359934982dc1b813c873021c0a3b71c76"
+      }
+    },
+    {
+      "name": "single-byte",
+      "description": "Single 0x42 byte.",
+      "input": {
+        "hex": "42"
+      },
+      "expected": {
+        "hex": "15b1a663c34ef6e59ff052ac530016fa469907ad9c26c7e77838649967ea4c27"
+      }
+    },
+    {
+      "name": "hello-world",
+      "description": "UTF-8 \"hello world\" (11 bytes).",
+      "input": {
+        "hex": "68656c6c6f20776f726c64"
+      },
+      "expected": {
+        "hex": "143db8b0a2bec08e7ac16c1bcd959b1381832dcfd75418b8e942cbdbf78a1ae4"
+      }
+    },
+    {
+      "name": "rate-minus-one",
+      "description": "63 zero bytes (one byte under the 64-byte rate).",
+      "input": {
+        "hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "hex": "53471396cebcf656f294e75f04bb552e21ab5a2c85b549dec611b8d7d2084a60"
+      }
+    },
+    {
+      "name": "rate-exact",
+      "description": "64 zero bytes (one rate-block before padding).",
+      "input": {
+        "hex": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "hex": "9e9af522e67524ed82e43654ffc3fd9dd2eda1f624e18ce63c1d9e914a0643d8"
+      }
+    },
+    {
+      "name": "rate-plus-one",
+      "description": "65 zero bytes (forces a second absorption block).",
+      "input": {
+        "hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "hex": "1eba85f99711d22ac801739ecbe731b3b26c071a33939bbbdb8e27b9757cdf19"
+      }
+    },
+    {
+      "name": "two-blocks",
+      "description": "128 zero bytes — exactly two rate blocks before padding.",
+      "input": {
+        "hex": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "hex": "82c96414ee2a8f28e4136fae897460e6af82c58e4dd6cfe8ee1f24e951904640"
+      }
+    },
+    {
+      "name": "two-blocks-plus",
+      "description": "129 zero bytes — three blocks total.",
+      "input": {
+        "hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "hex": "a8db831e50c9122eb582a154a6752d8f4b34d87245560bfea7f5a5ad54c15bb7"
+      }
+    },
+    {
+      "name": "patterned-1k",
+      "description": "1024 bytes of 0x5a — large input regression.",
+      "input": {
+        "hex": "5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+      },
+      "expected": {
+        "hex": "bf08fed2463f6b248b0688f0f71650b930f4f8cba1b9276dad000d1958837365"
+      }
+    },
+    {
+      "name": "unicode-nfc",
+      "description": "UTF-8 of NFC-normalized \"café\" (5 bytes).",
+      "input": {
+        "hex": "636166c3a9"
+      },
+      "expected": {
+        "hex": "2aebbb574aa5bd144695c92a30171a010748686c21176f8cca8aa8f5d1b72347"
+      }
+    }
+  ]
+}
