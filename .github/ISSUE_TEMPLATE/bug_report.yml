@@ -1,0 +1,71 @@
+name: Bug report
+description: Report a problem with elabify-core (any binding)
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. For **security vulnerabilities**, use the security policy
+        (private reporting), not a public issue. If this is a cross-binding parity
+        mismatch, please name the test vector.
+  - type: checkboxes
+    id: prechecks
+    attributes:
+      label: Before you start
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: This is not a security vulnerability (those go through SECURITY.md, privately).
+          required: true
+  - type: dropdown
+    id: impl
+    attributes:
+      label: Implementation
+      options:
+        - TypeScript (canonical)
+        - Swift binding
+        - Kotlin binding
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version / commit
+      description: The package version or the git commit you built from.
+      placeholder: "0.1.0 or <git sha>"
+    validations:
+      required: true
+  - type: input
+    id: runtime
+    attributes:
+      label: Runtime / toolchain
+      description: e.g. Node 20.11, Swift 6.2 / Xcode 16, or Kotlin 2.2 / JDK 21.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal snippet is ideal. Use code fences.
+    validations:
+      required: true
+  - type: textarea
+    id: kat
+    attributes:
+      label: Test vector (parity mismatches only)
+      description: Which `test-vectors/*.kat.json` case, and the differing output across bindings.
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened
+    validations:
+      required: true
