@@ -1,20 +1,26 @@
 // RPO-256 sponge hash over the Goldilocks field. Byte-equivalent port of
 // the TypeScript implementation in @elabify/core/src/rpo256.ts.
 //
-// Field: p = 2^64 - 2^32 + 1. The TS source uses BigInt; Kotlin/JVM uses
-// java.math.BigInteger for the same correctness-first reduction (the
-// performance optimization with native 128-bit multiplication is deferred
-// to M0-proper performance budgets, mirroring the Swift port).
-//
-// Cross-binding equivalence: test-vectors/rpo256.kat.json (10 vectors).
+// Field: p = 2^64 - 2^32 + 1. Arithmetic is done in primitive unsigned 64-bit
+// (Long) using the standard Goldilocks fast reduction (2^64 == 2^32 - 1 mod p,
+// 2^96 == -1 mod p), matching the native 64-bit path the Swift port uses. An
+// earlier revision used java.math.BigInteger for the same reduction; on-device
+// that made a single Merkle-tree-plus-proofs presentation take ~8 seconds (the
+// inverse S-box does ~63 squarings of ~128-bit values per lane per round). The
+// Long path is the same field, byte-for-byte: validated against
+// test-vectors/rpo256.kat.json (10 vectors) which guards cross-binding
+// equivalence with iOS / TypeScript / the verifier-server.
 
 package com.elabify.core
 
-import java.math.BigInteger
+// p = 2^64 - 2^32 + 1, held as an unsigned Long (compare/sub via *Unsigned ops).
+private val ORDER: Long = 0xFFFFFFFF00000001uL.toLong()
 
-private val GOLD_P: BigInteger = BigInteger("18446744069414584321")   // 2^64 - 2^32 + 1
-private val ALPHA: BigInteger  = BigInteger.valueOf(7)
-private val A_INV: BigInteger  = BigInteger("10540996611094048183")
+// 2^64 mod p = 2^32 - 1. The reduction constant.
+private const val EPSILON: Long = 0xFFFFFFFFL
+
+private const val ALPHA: Long = 7L
+private val A_INV: Long = 10540996611094048183uL.toLong()
 
 private val MDS: Array<LongArray> = arrayOf(
     longArrayOf( 7, 23,  8, 26, 20,  7,  1, 20,  4,  8,  1,  1),
@@ -40,50 +46,99 @@ private val RC: LongArray = longArrayOf(
     2828427124746L, 3000000000000L, 3141592653589L, 3316624790355L,
 )
 
-private fun fm(a: BigInteger): BigInteger {
-    val r = a.mod(GOLD_P)
-    return if (r.signum() < 0) r.add(GOLD_P) else r
+/** Reduce an arbitrary 64-bit value into the canonical range [0, p). Since
+ *  2^64 < 2p, a single conditional subtract suffices. */
+private fun reduce64(x: Long): Long =
+    if (java.lang.Long.compareUnsigned(x, ORDER) >= 0) x - ORDER else x
+
+/** Field addition of two canonical operands ([0, p)), returning canonical. */
+private fun fmAdd(a: Long, b: Long): Long {
+    var sum = a + b
+    if (java.lang.Long.compareUnsigned(sum, a) < 0) {
+        // Carry out of 64 bits: 2^64 == EPSILON (mod p). The result stays < p.
+        sum += EPSILON
+    } else if (java.lang.Long.compareUnsigned(sum, ORDER) >= 0) {
+        sum -= ORDER
+    }
+    return sum
 }
 
-private fun fmAdd(a: BigInteger, b: BigInteger): BigInteger = fm(a.add(b))
-private fun fmMul(a: BigInteger, b: BigInteger): BigInteger = fm(a.multiply(b))
+/** Reduce a 128-bit product (lo + hi * 2^64) to canonical [0, p). */
+private fun reduce128(lo: Long, hi: Long): Long {
+    val hiHi = hi ushr 32          // coefficient of 2^96 == -1 (mod p)
+    val hiLo = hi and 0xFFFFFFFFL  // coefficient of 2^64 == EPSILON (mod p)
 
-private fun fmPow(base: BigInteger, exp: BigInteger): BigInteger {
-    var r = BigInteger.ONE
-    var b = fm(base)
+    var t0 = lo - hiHi
+    if (java.lang.Long.compareUnsigned(lo, hiHi) < 0) {
+        // Borrow: correct by EPSILON (the wrap is 2^64 == EPSILON mod p).
+        t0 -= EPSILON
+    }
+    val t1 = hiLo * EPSILON         // < 2^32 * 2^32 == 2^64, no overflow
+    var res = t0 + t1
+    if (java.lang.Long.compareUnsigned(res, t0) < 0) {
+        res += EPSILON
+    }
+    if (java.lang.Long.compareUnsigned(res, ORDER) >= 0) res -= ORDER
+    return res
+}
+
+/** Field multiplication of two canonical operands, returning canonical. */
+private fun fmMul(a: Long, b: Long): Long {
+    // 64x64 -> 128 schoolbook on 32-bit halves (portable; no Math.multiplyHigh
+    // dependency, which only exists from API 31).
+    val aLo = a and 0xFFFFFFFFL
+    val aHi = a ushr 32
+    val bLo = b and 0xFFFFFFFFL
+    val bHi = b ushr 32
+
+    val ll = aLo * bLo
+    val lh = aLo * bHi
+    val hl = aHi * bLo
+    val hh = aHi * bHi
+
+    val cross = (ll ushr 32) + (lh and 0xFFFFFFFFL) + (hl and 0xFFFFFFFFL)
+    val lo = (ll and 0xFFFFFFFFL) or (cross shl 32)
+    val hi = hh + (lh ushr 32) + (hl ushr 32) + (cross ushr 32)
+    return reduce128(lo, hi)
+}
+
+/** base^exp mod p. `exp` is treated as an unsigned 64-bit value. */
+private fun fmPow(base: Long, exp: Long): Long {
+    var r = 1L
+    var b = base
     var e = exp
-    while (e.signum() > 0) {
-        if (e.testBit(0)) r = fmMul(r, b)
+    while (e != 0L) {
+        if (e and 1L == 1L) r = fmMul(r, b)
         b = fmMul(b, b)
-        e = e.shiftRight(1)
+        e = e ushr 1
     }
     return r
 }
 
-private fun mdsMul(s: Array<BigInteger>): Array<BigInteger> {
-    val out = Array(12) { BigInteger.ZERO }
+private fun mdsMul(s: LongArray): LongArray {
+    val out = LongArray(12)
     for (i in 0..11) {
-        var v = BigInteger.ZERO
+        var v = 0L
         for (j in 0..11) {
-            v = fmAdd(v, fmMul(BigInteger.valueOf(MDS[i][j]), s[j]))
+            v = fmAdd(v, fmMul(MDS[i][j], s[j]))
         }
         out[i] = v
     }
     return out
 }
 
-private fun rpoPermutation(state: Array<BigInteger>): Array<BigInteger> {
+private fun rpoPermutation(state: LongArray): LongArray {
     var x = state.copyOf()
     for (r in 0..6) {
         for (i in 0..11) {
-            x[i] = fmAdd(x[i], BigInteger.valueOf(RC[(r * 24 + i) % RC.size]))
+            x[i] = fmAdd(x[i], RC[(r * 24 + i) % RC.size])
         }
         for (i in 0..11) {
             x[i] = fmPow(x[i], ALPHA)
         }
         x = mdsMul(x)
         for (i in 0..11) {
-            x[i] = fmAdd(x[i], BigInteger.valueOf(RC[(r * 24 + 12 + i) % RC.size]))
+            x[i] = fmAdd(x[i], RC[(r * 24 + 12 + i) % RC.size])
         }
         for (i in 0..11) {
             x[i] = fmPow(x[i], A_INV)
@@ -104,17 +159,17 @@ fun rpo256(input: ByteArray): ByteArray {
     System.arraycopy(input, 0, padded, 0, input.size)
     padded[input.size] = 0x01
 
-    var state = Array(12) { BigInteger.ZERO }
+    var state = LongArray(12)
     val blocks = padded.size / 64
     for (blk in 0 until blocks) {
         val base = blk * 64
         for (i in 0..7) {
-            var v = BigInteger.ZERO
+            var v = 0L
             for (j in 0..7) {
                 val byteVal = (padded[base + i * 8 + j].toInt() and 0xff).toLong()
-                v = v.or(BigInteger.valueOf(byteVal).shiftLeft(j * 8))
+                v = v or (byteVal shl (j * 8))
             }
-            state[i] = fmAdd(state[i], v)
+            state[i] = fmAdd(state[i], reduce64(v))
         }
         state = rpoPermutation(state)
     }
@@ -123,8 +178,8 @@ fun rpo256(input: ByteArray): ByteArray {
     for (i in 0..3) {
         var v = state[i]
         for (k in 0..7) {
-            out[i * 8 + k] = v.and(BigInteger.valueOf(0xff)).toByte()
-            v = v.shiftRight(8)
+            out[i * 8 + k] = (v and 0xff).toByte()
+            v = v ushr 8
         }
     }
     return out

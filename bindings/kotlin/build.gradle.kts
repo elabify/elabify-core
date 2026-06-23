@@ -37,18 +37,19 @@ dependencies {
     "testImplementation"("org.jetbrains.kotlin:kotlin-test")
 }
 
-// Pin the bytecode target to JVM 21 (LTS) for both Java and Kotlin so the
-// .class files line up. The user's runtime JDK can be anything ≥ 21 (we
-// run on Homebrew openjdk@25 today). Kotlin 2.2 doesn't yet support
-// JVM_25 target which causes a Java/Kotlin target mismatch if we let it
-// auto-pick.
+// Pin the bytecode target to JVM 17 (LTS) for both Java and Kotlin. 17 is
+// the Android baseline (AGP compileOptions target 17), so the Android SDK +
+// app consume this artifact and run its unit tests on JDK 17 without a
+// class-file-version mismatch. The runtime JDK can be anything >= 17; we
+// pin the *output* so .class files line up and don't auto-pick a newer
+// target than Android can dex/load.
 configure<JavaPluginExtension> {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
     }
 }
 

@@ -1,0 +1,90 @@
+{
+  "algorithm" : "BIP-39 (24-word) + master-seed = PBKDF2-HMAC-SHA512[0..32]",
+  "source" : "iOS BIP39.swift + PBKDF2.swift (NFKC, c=2048)",
+  "vectors" : [
+    {
+      "bip39SeedHex" : "408b285c123836004f4b8842c89324c1f01382450c0d439af345ba7fc49acf705489c6fc77dbd4e3dc1dd8cc6bc9f043db8ada1e243c4a0eafb290d399480840",
+      "entropyHex" : "0000000000000000000000000000000000000000000000000000000000000000",
+      "masterSeedHex" : "408b285c123836004f4b8842c89324c1f01382450c0d439af345ba7fc49acf70",
+      "mnemonic" : "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art",
+      "passphrase" : ""
+    },
+    {
+      "bip39SeedHex" : "bda85446c68413707090a52022edd26a1c9462295029f2e60cd7c4f2bbd3097170af7a4d73245cafa9c3cca8d561a7c3de6f5d4a10be8ed2a5e608d68f92fcc8",
+      "entropyHex" : "0000000000000000000000000000000000000000000000000000000000000000",
+      "masterSeedHex" : "bda85446c68413707090a52022edd26a1c9462295029f2e60cd7c4f2bbd30971",
+      "mnemonic" : "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art",
+      "passphrase" : "TREZOR"
+    },
+    {
+      "bip39SeedHex" : "59c6e81d544a3d45c3b41e9a666bf9095c44ed86b71515ee8ebfd3335b384b1f01a98da8c67372618f26a282ea88b23f859272a249a339a2bafe9bc03f9fe945",
+      "entropyHex" : "0000000000000000000000000000000000000000000000000000000000000000",
+      "masterSeedHex" : "59c6e81d544a3d45c3b41e9a666bf9095c44ed86b71515ee8ebfd3335b384b1f",
+      "mnemonic" : "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art",
+      "passphrase" : "ünïcödé🔑"
+    },
+    {
+      "bip39SeedHex" : "ebc263234e1cabe47b4fbdaddc354ea21e11d4832ee301a45a3f77a35057a4f2b8469f6d848109c3cd7822cb93e4b59fa2739e589a49e13b6a2e13d5f41060dd",
+      "entropyHex" : "0707070707070707070707070707070707070707070707070707070707070707",
+      "masterSeedHex" : "ebc263234e1cabe47b4fbdaddc354ea21e11d4832ee301a45a3f77a35057a4f2",
+      "mnemonic" : "alpha deal scrub asthma idea logic bright thought alpha deal scrub asthma idea logic bright thought alpha deal scrub asthma idea logic bright truly",
+      "passphrase" : ""
+    },
+    {
+      "bip39SeedHex" : "4cf486a7060fd1289ae173ec20b1c85d123fa244d04f65857bcb08415274a7b11ff5d83e40f79d5202c7bc985a6097e6adce4f708d5a683fb15fcb636f9ea2fc",
+      "entropyHex" : "0707070707070707070707070707070707070707070707070707070707070707",
+      "masterSeedHex" : "4cf486a7060fd1289ae173ec20b1c85d123fa244d04f65857bcb08415274a7b1",
+      "mnemonic" : "alpha deal scrub asthma idea logic bright thought alpha deal scrub asthma idea logic bright thought alpha deal scrub asthma idea logic bright truly",
+      "passphrase" : "TREZOR"
+    },
+    {
+      "bip39SeedHex" : "e2e87a0733fcec4bdc505eb30a27d48fe5a0d427c419f8e923cdc5a8507720a092f99488e85e7907c89198d8f2de31103317954150ded726f3f214342cf408eb",
+      "entropyHex" : "0707070707070707070707070707070707070707070707070707070707070707",
+      "masterSeedHex" : "e2e87a0733fcec4bdc505eb30a27d48fe5a0d427c419f8e923cdc5a8507720a0",
+      "mnemonic" : "alpha deal scrub asthma idea logic bright thought alpha deal scrub asthma idea logic bright thought alpha deal scrub asthma idea logic bright truly",
+      "passphrase" : "ünïcödé🔑"
+    },
+    {
+      "bip39SeedHex" : "0a6d060f6242aece4b074e48e7d8166f792a9b2bb7b295fa5ac289eda7647290c3d80e7436d6e9e34e72769c06f6582192d0b57ae4a97e9e24c8972a770a57d9",
+      "entropyHex" : "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "masterSeedHex" : "0a6d060f6242aece4b074e48e7d8166f792a9b2bb7b295fa5ac289eda7647290",
+      "mnemonic" : "abandon amount liar amount expire adjust cage candy arch gather drum bullet absurd math era live bid rhythm alien crouch range attend journey unaware",
+      "passphrase" : ""
+    },
+    {
+      "bip39SeedHex" : "e00fc08b7fa18c78eb9a943c2ce3903eb52d2590be5aadfe83b39465ac66c3a6490a134828a61d311d62974b4ce0708d9a714c529f3e45b296640a9297c6f383",
+      "entropyHex" : "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "masterSeedHex" : "e00fc08b7fa18c78eb9a943c2ce3903eb52d2590be5aadfe83b39465ac66c3a6",
+      "mnemonic" : "abandon amount liar amount expire adjust cage candy arch gather drum bullet absurd math era live bid rhythm alien crouch range attend journey unaware",
+      "passphrase" : "TREZOR"
+    },
+    {
+      "bip39SeedHex" : "72aa12aeab17e09d1f603e63be9b9128e58fb061c39758609906d899f3cfb1baa91faed75d6cabcdf8078e0061cc09d4e5414add61c4e7a945bd83f66e0babb1",
+      "entropyHex" : "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "masterSeedHex" : "72aa12aeab17e09d1f603e63be9b9128e58fb061c39758609906d899f3cfb1ba",
+      "mnemonic" : "abandon amount liar amount expire adjust cage candy arch gather drum bullet absurd math era live bid rhythm alien crouch range attend journey unaware",
+      "passphrase" : "ünïcödé🔑"
+    },
+    {
+      "bip39SeedHex" : "e28a37058c7f5112ec9e16a3437cf363a2572d70b6ceb3b6965447623d620f14d06bb321a26b33ec15fcd84a3b5ddfd5520e230c924c87aaa0d559749e044fef",
+      "entropyHex" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "masterSeedHex" : "e28a37058c7f5112ec9e16a3437cf363a2572d70b6ceb3b6965447623d620f14",
+      "mnemonic" : "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo vote",
+      "passphrase" : ""
+    },
+    {
+      "bip39SeedHex" : "dd48c104698c30cfe2b6142103248622fb7bb0ff692eebb00089b32d22484e1613912f0a5b694407be899ffd31ed3992c456cdf60f5d4564b8ba3f05a69890ad",
+      "entropyHex" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "masterSeedHex" : "dd48c104698c30cfe2b6142103248622fb7bb0ff692eebb00089b32d22484e16",
+      "mnemonic" : "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo vote",
+      "passphrase" : "TREZOR"
+    },
+    {
+      "bip39SeedHex" : "9eb43b778818435723997f223edaab2b008420a2c83fa5cda980e2b8fbb893ebbfe2ad81a0cc40daeaa355a772dd21ed91607c0bb342958234f796e41b4996ce",
+      "entropyHex" : "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "masterSeedHex" : "9eb43b778818435723997f223edaab2b008420a2c83fa5cda980e2b8fbb893eb",
+      "mnemonic" : "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo vote",
+      "passphrase" : "ünïcödé🔑"
+    }
+  ]
+}
